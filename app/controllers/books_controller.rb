@@ -9,13 +9,13 @@ class BooksController < ApplicationController
 
   def new
     @count = Book.count
-    @book = Book.find(position: @count+1)
+    @book = Book.new
   end
 
   def create 
     @book = Book.new(book_params)
     if @book.save 
-      redirect_to books_path      
+      redirect_to books_path, notice: ("book '" + @book.title + "' created")   
     else
       render('new')
     end
@@ -28,7 +28,7 @@ class BooksController < ApplicationController
   def update 
     @book = Book.find(params[:id])
     if @book.update(book_params) 
-      redirect_to book_path(@book)
+      redirect_to book_path(@book), notice: ("book '" + @book.title + "' updated")
     else 
       render('edit')
     end
@@ -40,8 +40,9 @@ class BooksController < ApplicationController
 
   def destroy 
     @book = Book.find(params[:id])
+    @title = @book.title
     @book.destroy 
-    redirect_to books_path
+    redirect_to books_path, notice: ("book '" + @title + "' destroyed")
   end
 
   private
